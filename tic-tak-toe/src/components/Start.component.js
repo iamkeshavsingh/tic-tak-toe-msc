@@ -33,9 +33,9 @@ class Start extends React.Component {
             <div className="Start">
                 <form onSubmit={this.handleSubmit}>
                     <label htmlFor="player1">Player1 Info</label>
-                    <input onChange={this.handleChange} id="player1" />
+                    <input required onChange={this.handleChange} id="player1" />
                     <label htmlFor="player2">Player2 Info</label>
-                    <input onChange={this.handleChange} id="player2" />
+                    <input required onChange={this.handleChange} id="player2" />
                     <button type="submit">Start The Game</button>
                 </form>
             </div>

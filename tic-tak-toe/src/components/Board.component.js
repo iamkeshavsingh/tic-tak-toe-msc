@@ -2,25 +2,43 @@ import React from 'react';
 
 import Square from './Square.component';
 import './Board.css';
+import getWinner from '../helper/winner';
 
 
 class Board extends React.Component {
 
     state = {
-        type: 'X'
+        board: Array(9).fill(null),
+        isX: true
     };
 
-    handleClick = () => {
-        this.setState({
-            type: '0'
-        });
-    }
+    handleChange = (idx) => {
+        var value = this.state.isX ? 'X' : '0';
+        var copyBoard = [...this.state.board];
+        copyBoard[idx] = value;
+        this.props.chance(this.state.isX);
+
+        // check all the boards are filled
+        // match drawn
+
+        var winner = getWinner(copyBoard);
+        if (winner === false) {
+            this.setState({
+                board: copyBoard,
+                isX: !this.state.isX
+            });
+        }
+        else {
+            this.props.winner(winner);
+        }
+    };
 
     render() {
         return (
-            <div>
-                <button onClick={this.handleClick}>Change</button>
-                <Square type={this.state.type} />
+            <div className="Board">
+                {this.state.board.map((value, idx) => {
+                    return <Square key={idx} type={value} click={this.handleChange} idx={idx} />
+                })}
             </div>
         );
     }

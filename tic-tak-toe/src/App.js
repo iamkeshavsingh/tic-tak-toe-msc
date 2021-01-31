@@ -14,15 +14,79 @@ class App extends React.Component {
     chance: null,
     status: -1,
     isGameOn: false,
+    firstChance: null
   };
 
   getPlayersInfo = (player1, player2) => {
+
+    var value = Math.random();
+    var flooredValue = Math.floor(value * 2);
+    var current;
+
+    if (flooredValue === 0) {
+      current = player1;
+    }
+    else {
+      current = player2;
+    }
+
     this.setState({
       player1: player1,
       player2: player2,
-      isGameOn: true
+      isGameOn: true,
+      chance: current,
+      firstChance: current
     });
   };
+
+  handleChanceChange = (isX) => {
+
+    if (isX) {
+      if (this.state.firstChance === this.state.player1) {
+        this.setState({
+          chance: this.state.player2
+        });
+      }
+      else {
+        this.setState({
+          chance: this.state.player1
+        });
+      }
+    }
+    else {
+      if (this.state.firstChance === this.state.player1) {
+        this.setState({
+          chance: this.state.player1
+        });
+      }
+      else {
+        this.setState({
+          chance: this.state.player2
+        });
+      }
+    }
+
+  };
+
+  handleWinner = (winner) => {
+    if (winner === 'X') {
+      this.setState({
+        status: 1
+      });
+    }
+    else {
+      if (this.state.firstChance === this.state.player1) {
+        this.setState({
+          status: 2
+        });
+      }
+      else {
+        this.setState({
+          status: 1
+        });
+      }
+    }
+  }
 
   render() {
 
@@ -32,7 +96,7 @@ class App extends React.Component {
       <div>
         <PlayerInfo player1={player1} player2={player2} />
         <Turn chance={chance} />
-        <Board />
+        <Board chance={this.handleChanceChange} winner={this.handleWinner} />
         <Feedback status={status} player1={player1} player2={player2} />
       </div>
     ) : <Start getPlayersInfo={this.getPlayersInfo} />;
